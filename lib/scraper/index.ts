@@ -1,10 +1,12 @@
 "use server"
 
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+
 export async function scrapeAmazonProduct(url: string){
     if(!url) return;
 
-    // curl --proxy brd.superproxy.io:22225 --proxy-user brd-customer-hl_81866a6e-zone-pricewise:ghjwbz1egm3b -k https://lumtest.com/myip.json
-
+    
     //Brightdata Proxy Configuration
     const username = String(process.env.BRIGHT_DATA_USERNAME);
     const password = String(process.env.BRIGHT_DATA_PASSWORD);
@@ -23,6 +25,17 @@ export async function scrapeAmazonProduct(url: string){
     }
 
     try {
+
+        // Fetch the product page
+        const response = await axios.get(url, options);
+
+        const $ = cheerio.load(response.data);
+        
+        // Extract the product title
+        const title = $('#productTitle').text().trim();
+        
+        
+        
         
     } catch (error : any) {
         console.log(`Scraping error : ${error}`);
